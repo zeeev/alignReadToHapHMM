@@ -4,6 +4,7 @@ alignReadToHapHMM headers aligns NGS reads to a “reference” haplotype and ca
 
 ### Requirements
 A modern c++ compiler
+
 cmake
 
 ### Running the code:
