@@ -38,8 +38,8 @@ private:
     uint NCOL; /*!< Haplotype length +1 */
 
     void dumpMat(double ** mat, int nrow, int ncol){
-        for(uint i = 0; i < nrow; i++){
-            for(uint j = 0; j < ncol; j++){
+        for(int i = 0; i < nrow; i++){
+            for(int j = 0; j < ncol; j++){
                 std::cerr << mat[i][j] << "\t";
             }
             std::cerr << std::endl;

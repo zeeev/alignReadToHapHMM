@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "gtest/gtest.h"
 #include "test/phredUtilsTests.h"
+#include "test/alignHMMTests.h"
 
 GTEST_API_ int main(int argc, char** argv)
 {
