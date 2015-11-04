@@ -9,7 +9,7 @@ cmake
 
 ### Running the code:
 ```
-git clone https://github.com/jewmanchue/alignReadToHapHMM.git
+git clone https://github.com/zeeev/alignReadToHapHMM.git
 cd alignReadToHapHMM
 make
 
