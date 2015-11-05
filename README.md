@@ -17,4 +17,8 @@ make
 
 ### Note :
 
-log10() and pow() approximations have made the code much faster at the expense of ~1-5 logLikelihood.  
+log10() and pow() approximations have made the code much faster at the expense of ~1-5 logLikelihood.  This drops the runtime for the example from 15 seconds to 5 seconds.  If you need accuate log likelihoods just replace the logs and pow. 
+
+
+### ToDo
+[] Add a compile flag : fast|accurate
