@@ -21,4 +21,4 @@ log10() and pow() approximations have made the code much faster at the expense o
 
 
 ### ToDo
-[] Add a compile flag : fast|accurate
+- [ ] Add a compile flag : fast|accurate
