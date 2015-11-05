@@ -14,3 +14,7 @@ cd alignReadToHapHMM
 make
 
 ```
+
+### Note :
+
+log10() and pow() approximations have made the code much faster at the expense of ~1-5 logLikelihood.  
