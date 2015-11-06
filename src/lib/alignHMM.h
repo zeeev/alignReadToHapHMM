@@ -61,31 +61,36 @@ public:
     }
 
     alignHMM(int nrow, int ncol){
+
+      if(nrow > ncol){
+	std::cerr << "FATAL: haplotype smaller than read." << std::endl;
+	exit(1);
+      }
       
-        NROW = nrow;
-        NCOL = ncol;
-        
-        matchMatrix      = new double * [NROW];
-        insertionMatrix  = new double * [NROW];
-        deletionMatrix   = new double * [NROW];
-        priorMatrix      = new double * [NROW];
-        transitions      = new double [TRANS_PROB_ARRAY_LENGTH];
-        
-        for(uint i = 0; i < NROW; i++){
-            matchMatrix[i]      = new double [NCOL];
-            insertionMatrix[i]  = new double [NCOL];
-            deletionMatrix[i]   = new double [NCOL];
-            priorMatrix[i]      = new double [NCOL];
-        }
-        for(uint i = 0; i < NROW; i++){
-            for(uint j = 0; j < NCOL; j++){
-                matchMatrix[i][j]     = -INFINITY;
-                insertionMatrix[i][j] = -INFINITY;
-                deletionMatrix[i][j]  = -INFINITY;
-                priorMatrix[i][j]     = -INFINITY;
-            }
-        }
-        
+      NROW = nrow;
+      NCOL = ncol;
+      
+      matchMatrix      = new double * [NROW];
+      insertionMatrix  = new double * [NROW];
+      deletionMatrix   = new double * [NROW];
+      priorMatrix      = new double * [NROW];
+      transitions      = new double [TRANS_PROB_ARRAY_LENGTH];
+      
+      for(uint i = 0; i < NROW; i++){
+	matchMatrix[i]      = new double [NCOL];
+	insertionMatrix[i]  = new double [NCOL];
+	deletionMatrix[i]   = new double [NCOL];
+	priorMatrix[i]      = new double [NCOL];
+      }
+      for(uint i = 0; i < NROW; i++){
+	for(uint j = 0; j < NCOL; j++){
+	  matchMatrix[i][j]     = -INFINITY;
+	  insertionMatrix[i][j] = -INFINITY;
+	  deletionMatrix[i][j]  = -INFINITY;
+	  priorMatrix[i][j]     = -INFINITY;
+	}
+      }
+      
     }
     bool initPriors(std::string & haplotype,
                     std::string & readSeq,
