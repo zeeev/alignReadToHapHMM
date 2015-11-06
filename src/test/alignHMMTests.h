@@ -313,7 +313,6 @@ TEST(alignHMM, variants){
 
   double pRead5 = mats5.finalLikelihoodCalculation();
 
-
   std::cout << std::endl;
   std::cout << "[          ] logLikelihood exact match      : " << pRead1 << std::endl;
   std::cout << "[          ] logLikelihood 1 SNV            : " << pRead2 << std::endl;
@@ -326,5 +325,77 @@ TEST(alignHMM, variants){
   ASSERT_GT(pRead1, pRead3);
   ASSERT_GT(pRead1, pRead4);
   ASSERT_GT(pRead1, pRead5);
+
+};
+
+TEST(alignHMM, variantCrossMapping){
+
+  std::vector<std::string> trace;
+  std::vector<std::string> quals;
+
+  // added TGC at start and end for indel buffering
+
+  std::string haplotypeA = "TGCCCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGTTGC";
+  //                           CCATAGAACAAACCAAGCACCTTTACTTGCAG----------------ATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT
+  std::string haplotypeB = "TGCCCATAGAACAAACCAAGCACCTTTACTTGCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGTTGC";
+
+
+  trace.push_back("CCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+  trace.push_back("CCATAGAACAAACCAAGCACCTTTACTTGCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+
+  quals.push_back("CCCFFFFFHHHHFIJJJHIIIJJJIGIIIIJJIJJJIJJIIGIGGHICGIJJJJJDFCHGIG=FHHIIIGJJIGGHCCEFFFFFEEEEEDCCCDDDDDC@");
+  quals.push_back("CCCFFFFFHHHHFIJJJHIIIJJJIGIIIIJJIJJJIJJIIGIGGHICGIJJJJJDFCHGIG=FHHIIIGJJIGGHCCEFFFFF");
+
+
+ 
+  alignHMM mats1(int(trace[0].size()) +1,int(haplotypeA.size()) +1);
+  mats1.initPriors(haplotypeA, trace[0], quals[0]);
+  mats1.initTransProbs();
+  mats1.initializeDelMat();
+  mats1.updatecells();
+
+ double pRead1Ref = mats1.finalLikelihoodCalculation();
+
+ alignHMM mats2(int(trace[0].size()) +1,int(haplotypeB.size()) +1);
+ mats2.initPriors(haplotypeB, trace[0], quals[0]);
+ mats2.initTransProbs();
+ mats2.initializeDelMat();
+ mats2.updatecells();
+
+ double pRead1Alt = mats2.finalLikelihoodCalculation();
+
+
+
+ std::cout << std::endl;
+ std::cout << "[          ] logLikelihood ref read aligned to ref : " << pRead1Ref << std::endl;
+ std::cout << "[          ] logLikelihood ref read aligned to alt : " << pRead1Alt << std::endl;
+ std::cout << std::endl;
+
+ ASSERT_GT(pRead1Ref, pRead1Alt);
+
+
+ alignHMM mats3(int(trace[1].size()) +1,int(haplotypeA.size()) +1);
+ mats3.initPriors(haplotypeA, trace[1], quals[1]);
+ mats3.initTransProbs();
+ mats3.initializeDelMat();
+ mats3.updatecells();
+
+ double pRead2Ref = mats3.finalLikelihoodCalculation();
+
+ alignHMM mats4(int(trace[1].size()) +1,int(haplotypeB.size()) +1);
+ mats4.initPriors(haplotypeB, trace[1], quals[1]);
+ mats4.initTransProbs();
+ mats4.initializeDelMat();
+ mats4.updatecells();
+
+ double pRead2Alt = mats4.finalLikelihoodCalculation();
+
+ std::cout << std::endl;
+ std::cout << "[          ] logLikelihood alt read aligned to ref : " << pRead2Ref << std::endl;
+ std::cout << "[          ] logLikelihood alt read aligned to alt : " << pRead2Alt << std::endl;
+ std::cout << std::endl;
+
+ ASSERT_GT(pRead2Alt, pRead2Ref);
+
 
 };
