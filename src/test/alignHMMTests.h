@@ -181,3 +181,150 @@ TEST(alignHMM, checkCalculations){
       
     }
 };
+
+
+TEST(alignHMM, higherQualHigherLL){
+
+  std::vector<std::string> trace;
+  std::vector<std::string> quals;
+
+  std::string haplotype = "CCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT";
+  trace.push_back("CCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+  trace.push_back("CCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+  trace.push_back("CCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+  trace.push_back("CCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+
+  quals.push_back("=?1+4=+2+2AA+AB9EDE:3<<A+2?E######!!!!!!##################################################!!!!!!!###");
+  quals.push_back("=?1+4=+2+2AA+AB9EDE:3<<A+2?E####################################222#################################");
+  quals.push_back("=?1+4=+2+2AA+AB9EDE:3<<A+2?E##############EE####################222################DDDDDDDDDD#######");
+  quals.push_back("AAAA4=+2+2AA+AB9EDE:3<<A+2?E##############EE####################222################DDDDDDDDDD#######");
+
+  alignHMM mats1(int(trace[0].size()) +1,int(haplotype.size()) +1);
+  mats1.initPriors(haplotype, trace[0], quals[0]);
+  mats1.initTransProbs();
+  mats1.initializeDelMat();
+  mats1.updatecells();
+
+  //  double pRead1 = mats1.finalLikelihoodCalculation();
+
+  alignHMM mats2(int(trace[1].size()) +1,int(haplotype.size()) +1);
+  mats2.initPriors(haplotype, trace[1], quals[1]);
+  mats2.initTransProbs();
+  mats2.initializeDelMat();
+  mats2.updatecells();
+
+  double pRead2 = mats2.finalLikelihoodCalculation();
+
+
+  alignHMM mats3(int(trace[2].size()) +1,int(haplotype.size()) +1);
+  mats3.initPriors(haplotype, trace[2], quals[2]);
+  mats3.initTransProbs();
+  mats3.initializeDelMat();
+  mats3.updatecells();
+
+  double pRead3 = mats3.finalLikelihoodCalculation();
+
+  alignHMM mats4(int(trace[3].size()) +1,int(haplotype.size()) +1);
+  mats4.initPriors(haplotype, trace[3], quals[3]);
+  mats4.initTransProbs();
+  mats4.initializeDelMat();
+  mats4.updatecells();
+
+  double pRead4 = mats4.finalLikelihoodCalculation();
+
+
+  std::cout << std::endl;
+  std::cout << "[          ] alignment logLikelihood higher1 sanger qual : " << pRead2 << std::endl;
+  std::cout << "[          ] alignment logLikelihood higher2 sanger qual : " << pRead3 << std::endl;
+  std::cout << "[          ] alignment logLikelihood higher3 sanger qual : " << pRead4 << std::endl;
+  std::cout << std::endl;
+
+  ASSERT_GT(pRead4, pRead3);
+  ASSERT_GT(pRead3, pRead2);
+
+}
+
+
+TEST(alignHMM, variants){
+
+  std::vector<std::string> trace;
+  std::vector<std::string> quals;
+
+  // added TGC at start and end for indel buffering
+
+  std::string haplotype = "TGCCCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGTTGC";
+
+   
+  trace.push_back("CCATAGAACAAACCAAGCACCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+  //                                 X  
+  trace.push_back("CCATAGAACAAACCAAGCTCCTTTACTTGCAGCTCTCTAAGGGCCCAGATTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+  //                                                             AGA  
+  trace.push_back("CCATAGAACAAACCAAGCTCCTTTACTTGCAGCTCTCTAAGGGCCCTTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+  //                                            CAT
+  trace.push_back("CCATAGAACAAACCAAGCTCCTTTACTTGCATCAGCTCTCTAAGGGCCCTTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+  //                                            CAT
+  trace.push_back("CCATAGAACAAACCAAGCTCCTTTACTTGCATCAGCTCTCTAAGGGCCCTTTGAGTTTTGATTCAGAGATGAGATAGCAGAGGTCTCTAGAAATGTCTGT");
+
+  quals.push_back("=?1+4=+2+2AA+AB9EDE:3<<A+2?E########################################################################");
+  quals.push_back("=?1+4=+2+2AA+AB9EDE:3<<A+2?E########################################################################");
+  quals.push_back("=?1+4=+2+2AA+AB9EDE:3<<A+2?E#####################################################################");
+  quals.push_back("=?1+4=+2+2AA+AB9EDE:3<<A+2?E#$$$####################################################################");
+  quals.push_back("=?1+4=+2+2AA+AB9EDE:3<<A+2?E#HHH####################################################################");
+
+
+  alignHMM mats1(int(trace[0].size()) +1,int(haplotype.size()) +1);
+  mats1.initPriors(haplotype, trace[0], quals[0]);
+  mats1.initTransProbs();
+  mats1.initializeDelMat();
+  mats1.updatecells();
+
+  double pRead1 = mats1.finalLikelihoodCalculation();
+  
+  alignHMM mats2(int(trace[1].size()) +1,int(haplotype.size()) +1);
+  mats2.initPriors(haplotype, trace[1], quals[1]);
+  mats2.initTransProbs();
+  mats2.initializeDelMat();
+  mats2.updatecells();
+
+  double pRead2 = mats2.finalLikelihoodCalculation();
+
+
+  alignHMM mats3(int(trace[2].size()) +1,int(haplotype.size()) +1);
+  mats3.initPriors(haplotype, trace[2], quals[2]);
+  mats3.initTransProbs();
+  mats3.initializeDelMat();
+  mats3.updatecells();
+
+  double pRead3 = mats3.finalLikelihoodCalculation();
+
+  alignHMM mats4(int(trace[3].size()) +1,int(haplotype.size()) +1);
+  mats4.initPriors(haplotype, trace[3], quals[3]);
+  mats4.initTransProbs();
+  mats4.initializeDelMat();
+  mats4.updatecells();
+
+  double pRead4 = mats4.finalLikelihoodCalculation();
+
+  alignHMM mats5(int(trace[4].size()) +1,int(haplotype.size()) +1);
+  mats5.initPriors(haplotype, trace[4], quals[4]);
+  mats5.initTransProbs();
+  mats5.initializeDelMat();
+  mats5.updatecells();
+
+  double pRead5 = mats5.finalLikelihoodCalculation();
+
+
+  std::cout << std::endl;
+  std::cout << "[          ] logLikelihood exact match      : " << pRead1 << std::endl;
+  std::cout << "[          ] logLikelihood 1 SNV            : " << pRead2 << std::endl;
+  std::cout << "[          ] logLikelihood 3bp DEL          : " << pRead3 << std::endl;
+  std::cout << "[          ] logLikelihood 3bp lowQual INS  : " << pRead4 << std::endl;
+  std::cout << "[          ] logLikelihood 3bp highQual INS : " << pRead5 << std::endl;
+  std::cout << std::endl;
+
+  ASSERT_GT(pRead1, pRead2);
+  ASSERT_GT(pRead1, pRead3);
+  ASSERT_GT(pRead1, pRead4);
+  ASSERT_GT(pRead1, pRead5);
+
+};

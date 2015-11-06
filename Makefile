@@ -7,7 +7,7 @@
 ######################################
 
 CC=g++
-CFLAGS= -Wall -std=c++0x -pthread  -lgtest 
+CFLAGS= -Wall -std=c++0x -pthread  -lgtest  -lm -O3
 INCLUDE=-Isrc/gtest-1.7.0/include/ -Isrc/lib
 LIB=-L.
 
