@@ -19,10 +19,10 @@ libgtest:
 	cp src/gtest-1.7.0/build/*.a .
 
 buildTest: gtest libgtest
-	$(CC) $(CFLAGS) $(INCLUDE) $(LIB) src/mainTest.cpp -lgtest -o runTests
+	$(CC) -DFAST $(CFLAGS) $(INCLUDE) $(LIB) src/mainTest.cpp -lgtest -o runTests
 
 buildExample:
-	$(CC) $(CFLAGS) $(INCLUDE) $(LIB) src/example.cpp -o example
+	$(CC) -DFAST $(CFLAGS) $(INCLUDE) $(LIB) src/example.cpp -o example
 runTest:
 	@./runTests && echo "Test success!" || echo "Test failure!" 
 

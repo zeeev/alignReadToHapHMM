@@ -1,6 +1,12 @@
 #include "gtest/gtest.h"
 #include "../lib/phredUtils.h"
 
+TEST(phredUtils, phredToProbLog10){
+  phredUtils pu;
+  double log10P = pu.phredToProbLog10(10);
+  ASSERT_NEAR(-0.04575749, log10P, 0.1);
+};
+
 TEST(phredUtils, qualToProbErrorLog10){
   phredUtils pu;
   double Log10P = pu.qualToProbErrorLog10(';');

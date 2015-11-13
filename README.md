@@ -17,8 +17,11 @@ make
 
 ### Note :
 
+__Both the query and reference MUST be uppercased!  The library does not check!__
+__Pass the compiler flag -DFAST or -DSLOW (accuracy).__
+
 log10() and pow() approximations have made the code much faster at the expense of ~1-5 logLikelihood.  This drops the runtime for the example from 15 seconds to 5 seconds.  If you need accuate log likelihoods just replace the logs and pow. 
 
 
-### ToDo
+### ToDo :
 - [ ] Add a compile flag : fast|accurate
