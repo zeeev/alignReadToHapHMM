@@ -1,6 +1,8 @@
 language: cpp
 compiler: 
  - gcc
+ - gcc-4.8
+ - g++
 os:
  - linux
 script: make
