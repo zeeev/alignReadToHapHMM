@@ -6,7 +6,8 @@
 
 ######################################
 
-CC=g++
+CC=gcc
+CXX=g++
 CFLAGS= -Wall -std=c++0x -pthread  -lgtest  -lm -O3
 INCLUDE=-Isrc/gtest-1.7.0/include/ -Isrc/lib
 LIB=-L.
@@ -19,10 +20,10 @@ libgtest:
 	cp src/gtest-1.7.0/build/*.a .
 
 buildTest: gtest libgtest
-	$(CC) -DFAST $(CFLAGS) $(INCLUDE) $(LIB) src/mainTest.cpp -lgtest -o runTests
+	$(CXX) -DFAST $(CFLAGS) $(INCLUDE) $(LIB) src/mainTest.cpp -lgtest -o runTests
 
 buildExample:
-	$(CC) -DFAST $(CFLAGS) $(INCLUDE) $(LIB) src/example.cpp -o example
+	$(CXX) -DFAST $(CFLAGS) $(INCLUDE) $(LIB) src/example.cpp -o example
 runTest:
 	@./runTests && echo "Test success!" || echo "Test failure!" 
 
